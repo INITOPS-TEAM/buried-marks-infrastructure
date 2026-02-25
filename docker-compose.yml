@@ -1,11 +1,80 @@
 services:
-  mariadb:
-    container_name: buried-marks-maria-db
-    env_file:
-      - mariadb.env
+  login-front:
+    container_name: login-frontend-service
+    build:
+      context: ../buried-marks-frontend-microservice/services/login_front
+      dockerfile: Dockerfile
+    ports:
+      - "5100:8080"
+    restart: always
+
+  map-front:
+    container_name: map-frontend-service
+    build:
+      context: ../buried-marks-frontend-microservice/services/map_front
+      dockerfile: Dockerfile
+    ports:
+      - "5200:8080"
+    restart: always
+
+  db:
+    image: postgres:18-alpine
+    container_name: auth_postgres
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    # expose:
+    #   - "80:5432"
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql
+
+  auth-service:
+    build:
+      context: ../buried-marks-authentication-microservice
+      dockerfile: Dockerfile
+    environment:
+      DB_HOST: db
+    # expose:
+    #   - "8000"
+    ports:
+      - "127.0.0.1:8000:8000"
+    depends_on:
+      -   db
+
+  map-service-db:
+    container_name: buried-marks-map-service-db
+    environment:
+      MARIADB_DATABASE: ${MARIADB_DATABASE}
+      MARIADB_USER: ${MARIADB_USER}
+      MARIADB_PASSWORD: ${MARIADB_PASSWORD}
+      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
     image: mariadb:11.4-noble
     restart: always
     ports:
-      -  3306
+       - "127.0.0.1:3306:3306"
     volumes:
       - ./data/mariadb:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      start_period: 5s
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  map-service:
+    build:
+      context: ../buried-marks-map-microservice
+      dockerfile: Dockerfile
+    ports:
+      - "127.0.0.1:9001:9001"
+    environment:
+      DATABASE_HOST: map-service-db
+    depends_on:
+      map-service-db:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
