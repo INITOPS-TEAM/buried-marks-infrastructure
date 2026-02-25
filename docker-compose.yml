@@ -1,0 +1,11 @@
+services:
+  mariadb:
+    container_name: buried-marks-maria-db
+    env_file:
+      - mariadb.env
+    image: mariadb:11.4-noble
+    restart: always
+    ports:
+      -  3306
+    volumes:
+      - ./data/mariadb:/var/lib/mysql
