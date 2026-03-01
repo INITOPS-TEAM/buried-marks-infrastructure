@@ -79,6 +79,8 @@ services:
     build:
       context: ../buried-marks-map-microservice
       dockerfile: Dockerfile
+    env_file:
+      - ../buried-marks-map-microservice/.env
     expose:
       - "9001"
     environment:
