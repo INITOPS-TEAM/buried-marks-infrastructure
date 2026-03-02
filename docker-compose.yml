@@ -89,5 +89,22 @@ services:
       map-service-db:
         condition: service_healthy
 
+  valkey:
+    image: valkey/valkey:9-alpine
+    container_name: valkey_db
+    volumes:
+      - valkey_data:/data
+
+  mail_service:
+    build:
+      context: ../buried-marks-mail-microservice
+      dockerfile: Dockerfile
+    container_name: mail_worker
+    env_file:
+      - ../buried-marks-mail-microservice/.env
+    depends_on:
+      - valkey
+
 volumes:
   postgres_data:
+  valkey_data:
