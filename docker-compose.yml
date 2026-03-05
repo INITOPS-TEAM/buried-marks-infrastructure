@@ -103,45 +103,31 @@ services:
   voting-service:
     container_name: voting-service
     build:
-      context: ./voting-service
-      dockerfile: docker/Dockerfile
+      context: ./buried-marks-voting-microservice
+      dockerfile: Dockerfile
     command: >
       bash -c "python app/backend_pre_start.py &&
-               alembic upgrade head &&
-               uvicorn app.main:app --host 0.0.0.0 --port 8900 --reload"
+      alembic upgrade head &&
+      uvicorn app.main:app --host 0.0.0.0 --port 8900 --reload"
     volumes:
-      - ./voting-service:/app
+      - ./buried-marks-voting-microservice:/app
     env_file:
-      - ./voting-service/.env
-    environment:
-      - DATABASE_URL=${VOTING_DATABASE_URL}
-      - PUBLIC_KEY_PATH=/app/public.pem
-      - AUTH_SERVICE_URL=http://auth-service:8000
-      - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
+      - ./buried-marks-voting-microservice/.env
     expose:
       - "8900"
     depends_on:
-      voting-db:
-        condition: service_healthy
+      - voting-db  
     restart: always
 
-    voting-db:
+  voting-db:
     container_name: voting_db
     image: postgres:alpine
-    environment:
-      - POSTGRES_USER=${VOTING_DB_USER}
-      - POSTGRES_PASSWORD=${VOTING_DB_PASSWORD}
-      - POSTGRES_DB=${VOTING_DB_NAME}
+    env_file:
+      - ./buried-marks-voting-microservice/.env
     expose:
       - "5432"
     volumes:
       - voting_db_data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${VOTING_DB_USER} -d ${VOTING_DB_NAME}"]
-      interval: 10s
-      timeout: 10s
-      retries: 10
-      start_period: 30s
     restart: always
 
 volumes:
