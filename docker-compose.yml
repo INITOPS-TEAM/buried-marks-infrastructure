@@ -105,10 +105,6 @@ services:
     build:
       context: ../buried-marks-voting-microservice
       dockerfile: Dockerfile
-    command: >
-      bash -c "python app/backend_pre_start.py &&
-      alembic upgrade head &&
-      uvicorn app.main:app --host 0.0.0.0 --port 8900 --reload"
     volumes:
       - ../buried-marks-voting-microservice:/app
     env_file:
