@@ -100,6 +100,33 @@ services:
     depends_on:
       - valkey
 
+  voting-service:
+    container_name: voting-service
+    build:
+      context: ../buried-marks-voting-microservice
+      dockerfile: Dockerfile
+    volumes:
+      - ../buried-marks-voting-microservice:/app
+    env_file:
+      - ../buried-marks-voting-microservice/.env
+    expose:
+      - "8900"
+    depends_on:
+      - voting-db  
+    restart: always
+
+  voting-db:
+    container_name: voting_db
+    image: postgres:alpine
+    env_file:
+      - ../buried-marks-voting-microservice/.env
+    expose:
+      - "5432"
+    volumes:
+      - voting_db_data:/var/lib/postgresql/data
+    restart: always
+
 volumes:
   postgres_data:
   valkey_data:
+  voting_db_data:
