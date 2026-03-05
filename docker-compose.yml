@@ -103,16 +103,16 @@ services:
   voting-service:
     container_name: voting-service
     build:
-      context: ./buried-marks-voting-microservice
+      context: ../buried-marks-voting-microservice
       dockerfile: Dockerfile
     command: >
       bash -c "python app/backend_pre_start.py &&
       alembic upgrade head &&
       uvicorn app.main:app --host 0.0.0.0 --port 8900 --reload"
     volumes:
-      - ./buried-marks-voting-microservice:/app
+      - ../buried-marks-voting-microservice:/app
     env_file:
-      - ./buried-marks-voting-microservice/.env
+      - ../buried-marks-voting-microservice/.env
     expose:
       - "8900"
     depends_on:
@@ -123,7 +123,7 @@ services:
     container_name: voting_db
     image: postgres:alpine
     env_file:
-      - ./buried-marks-voting-microservice/.env
+      - ../buried-marks-voting-microservice/.env
     expose:
       - "5432"
     volumes:
