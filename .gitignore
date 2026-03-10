@@ -1,2 +1,5 @@
 data
-.env
+.env.auth
+.env.mail
+.env.map
+.env.voting
