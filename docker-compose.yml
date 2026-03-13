@@ -131,7 +131,6 @@ services:
       - type: bind
         source: ../secrets/jwt_public_key
         target: /tmp/jwt_public_key
-      - ../buried-marks-voting-microservice:/app
     env_file:
       - .env.voting
     expose:
