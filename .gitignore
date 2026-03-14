@@ -1,5 +1,3 @@
 data
-.env.auth
-.env.mail
-.env.map
-.env.voting
+.env.*
+!.env.*.example
