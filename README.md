@@ -17,19 +17,23 @@ buried-marks-infrastructure/
 ├── .env.auth                   # Auth service environment variables
 ├── .env.map                    # Map service environment variables
 ├── .env.mail                   # Mail service environment variables
-└── .env.voting                 # Voting service environment variables
+├── .env.voting                 # Voting service environment variables
+├── .env.front                  # Frontend services environment variables
+└── .env.front.map              # Map-front service environment variables
 ```
 
 ## Environment Variables
 
 Each service has its own .env file located in the root of this repository. These files are not committed to git - request them from a team member.
 
-| File        | Service                     |
-|-------------|-----------------------------|
-| .env.auth   | auth-service, auth-db       |
-| .env.map    | map-service, map-service-db |
-| .env.mail   | mail-service                |
-| .env.voting | voting-service, voting-db   |
+| File            | Service                                |
+|-----------------|----------------------------------------|
+| .env.auth       | auth-service, auth-db                  |
+| .env.map        | map-service, map-service-db            |
+| .env.mail       | mail-service                           |
+| .env.voting     | voting-service, voting-db              |
+| .env.front      | login-front, voting-front, admin-front |
+| .env.map.front  | map-front                              |
 
 Copy the example files and fill in the values:
 
@@ -38,6 +42,8 @@ cp .env.auth.example .env.auth
 cp .env.map.example .env.map
 cp .env.mail.example .env.mail
 cp .env.voting.example .env.voting
+cp .env.front.example .env.front
+cp .env.map.front.example .env.map.front
 ```
 
 ## Secrets
@@ -69,7 +75,7 @@ Requires AWS ECR authentication before starting:
     ```
 
     ```
-    docker compose -f docker-compose.yml up
+    docker compose -f docker-compose.yml up --build --pull always
     ```
 
 ## Nginx

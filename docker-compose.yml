@@ -22,6 +22,8 @@ services:
   login-front:
     container_name: login-frontend-service
     image: 531331080468.dkr.ecr.eu-north-1.amazonaws.com/buried-marks-login-front
+    env_file:
+      - .env.front
     expose:
       - "8080"
     restart: always
@@ -29,6 +31,8 @@ services:
   map-front:
     container_name: map-frontend-service
     image: 531331080468.dkr.ecr.eu-north-1.amazonaws.com/buried-marks-map-front
+    env_file:
+      - .env.map.front
     expose:
       - "8080"
     restart: always
@@ -36,6 +40,8 @@ services:
   voting-front:
     container_name: voting-frontend-service
     image: 531331080468.dkr.ecr.eu-north-1.amazonaws.com/buried-marks-voting-front
+    env_file:
+      - .env.front
     expose:
       - "8080"
     restart: always
@@ -43,6 +49,8 @@ services:
   admin-front:
     container_name: admin-frontend-service
     image: 531331080468.dkr.ecr.eu-north-1.amazonaws.com/buried-marks-admin-front
+    env_file:
+      - .env.front
     expose:
       - "8080"
     restart: always
@@ -131,7 +139,6 @@ services:
       - type: bind
         source: ../secrets/jwt_public_key
         target: /tmp/jwt_public_key
-      - ../buried-marks-voting-microservice:/app
     env_file:
       - .env.voting
     expose:
